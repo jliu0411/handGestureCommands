@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+# Node
+node_modules/
+frontend/dist/
+# Local configuration
+.env
+.env.*
+!.env.example
+# Local data and generated training outputs
+*.log
+mlruns/
+wandb/
+datasets/raw/
+datasets/processed/
+artifacts/models/*.pt
+artifacts/models/*.pth
+artifacts/models/*.pkl
+artifacts/models/*.joblib
+# OS
+.DS_Store
+Thumbs.db
