@@ -1,0 +1,8 @@
+{
+  "palm": {"name": "Open Palm", "action": "pause"},
+  "fist": {"name": "Closed Fist", "action": "stop"},
+  "like": {"name": "Thumbs Up", "action": "confirm"},
+  "dislike": {"name": "Thumbs Down", "action": "cancel"},
+  "peace": {"name": "Peace Sign", "action": "next"},
+  "point": {"name": "Pointing Finger", "action": "select"}
+}

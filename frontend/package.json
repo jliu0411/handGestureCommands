@@ -1,5 +1,9 @@
 {
   "name": "hand-gesture-recognition-frontend",
   "private": true,
-  "description": "Placeholder; initialize the React + Vite project in this folder."
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {"dev": "vite --strictPort", "build": "vite build", "preview": "vite preview", "test": "node --test"},
+  "dependencies": {"react": "19.1.0", "react-dom": "19.1.0"},
+  "devDependencies": {"vite": "6.4.1"}
 }

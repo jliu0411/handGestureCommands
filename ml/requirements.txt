@@ -1,1 +1,10 @@
-# Add ML dependencies after selecting the training approach.
+numpy==1.26.4
+opencv-contrib-python==4.11.0.86
+mediapipe==0.10.21
+jax==0.4.38
+jaxlib==0.4.38
+pandas==2.2.3
+scikit-learn==1.6.1
+joblib==1.4.2
+Pillow==11.3.0
+matplotlib==3.10.1

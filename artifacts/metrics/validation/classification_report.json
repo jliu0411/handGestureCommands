@@ -1,0 +1,51 @@
+{
+  "palm": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 19.0
+  },
+  "fist": {
+    "precision": 0.9230769230769231,
+    "recall": 1.0,
+    "f1-score": 0.96,
+    "support": 12.0
+  },
+  "like": {
+    "precision": 0.9285714285714286,
+    "recall": 0.9285714285714286,
+    "f1-score": 0.9285714285714286,
+    "support": 14.0
+  },
+  "dislike": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 15.0
+  },
+  "peace": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 10.0
+  },
+  "point": {
+    "precision": 0.9166666666666666,
+    "recall": 0.8461538461538461,
+    "f1-score": 0.88,
+    "support": 13.0
+  },
+  "accuracy": 0.963855421686747,
+  "macro avg": {
+    "precision": 0.9613858363858365,
+    "recall": 0.9624542124542125,
+    "f1-score": 0.9614285714285714,
+    "support": 83.0
+  },
+  "weighted avg": {
+    "precision": 0.9637781896818043,
+    "recall": 0.963855421686747,
+    "f1-score": 0.9633734939759035,
+    "support": 83.0
+  }
+}

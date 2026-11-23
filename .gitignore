@@ -2,25 +2,45 @@
 __pycache__/
 *.py[cod]
 .venv/
+.venv-*/
 venv/
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
 # Node
 node_modules/
-frontend/dist/
+/frontend/dist/
+.npm-cache/
+
+# Temporary files and editor metadata
+*.log
+*.tmp
+*.part
+.vscode/
+.idea/
+.vs/
+*.swp
+.DS_Store
+Thumbs.db
+
 # Local configuration
 .env
 .env.*
 !.env.example
-# Local data and generated training outputs
-*.log
+secrets/
+*.pem
+*.key
+
+# Local datasets and experiment caches
 mlruns/
 wandb/
-datasets/raw/
-datasets/processed/
-artifacts/models/*.pt
-artifacts/models/*.pth
-artifacts/models/*.pkl
-artifacts/models/*.joblib
-# OS
-.DS_Store
-Thumbs.db
+/datasets/raw/
+/datasets/processed/
+
+# Keep reports, figures and the reference Random Forest eligible for Git.
+/artifacts/models/**/*.pt
+/artifacts/models/**/*.pth
+/artifacts/models/**/*.pkl
+/artifacts/models/**/*.joblib
+!/artifacts/models/random_forest.joblib
