@@ -1,4 +1,5 @@
 import json
+from dataclasses import dataclass
 from pathlib import Path
 
 import cv2
@@ -30,12 +31,20 @@ class HandOutsideBox(ValueError):
     """The detected landmarks do not match the annotated hand."""
 
 
+@dataclass(frozen=True)
+class HandObservation:
+    features: np.ndarray
+    center: tuple[float, float] | None
+    image_xy: np.ndarray | None = None
+    detected_hands: int = 1
+
+
 class HandDetector:
-    def __init__(self):
+    def __init__(self, max_hands=1):
         import mediapipe as mp
 
         self.hands = mp.solutions.hands.Hands(
-            static_image_mode=True, max_num_hands=1,
+            static_image_mode=True, max_num_hands=max_hands,
             min_detection_confidence=PREPROCESSING["detection_confidence"],
         )
 
@@ -43,6 +52,10 @@ class HandDetector:
         self.hands.close()
 
     def extract(self, bgr, expected_bbox=None):
+        observation = self.observe(bgr, expected_bbox)
+        return None if observation is None else observation.features
+
+    def observe(self, bgr, expected_bbox=None):
         height, width = bgr.shape[:2]
         scale = PREPROCESSING["max_frame_edge"] / max(height, width)
         if scale < 1:
@@ -60,4 +73,8 @@ class HandDetector:
             xy = np.asarray(points)[:, :2]
             if np.count_nonzero(((xy >= lower) & (xy <= upper)).all(axis=1)) < 11:
                 raise HandOutsideBox("Detected hand is outside the target annotation")
-        return features
+        # Use image-space coordinates before wrist centering and rescaling.
+        image_xy = np.asarray(points)[:, :2]
+        x, y = image_xy[[0, 5, 9, 13, 17]].mean(axis=0)
+        center = (float(x), float(y)) if 0 <= x <= 1 and 0 <= y <= 1 else None
+        return HandObservation(features, center, image_xy, len(result.multi_hand_landmarks))

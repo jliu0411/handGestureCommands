@@ -67,6 +67,8 @@ def test_annotation_checks_target_without_changing_features():
         multi_hand_landmarks=[SimpleNamespace(landmark=landmarks)],
     ))
     image = np.zeros((48, 64, 3), dtype=np.uint8)
-    np.testing.assert_array_equal(detector.extract(image), detector.extract(image, [0.25, 0.35, 0.3, 0.2]))
+    observation = detector.observe(image)
+    np.testing.assert_allclose(observation.center, [0.388, 0.4])
+    np.testing.assert_array_equal(observation.features, detector.extract(image, [0.25, 0.35, 0.3, 0.2]))
     with pytest.raises(HandOutsideBox):
         detector.extract(image, [0.65, 0.65, 0.3, 0.2])

@@ -59,7 +59,8 @@ def create_app(model_path=None, metrics_dir=None, service_loader=GestureService.
         service = app.state.service
         return {"model_name": "random_forest", "loaded": service is not None,
                 "model_id": service.model_id if service else None,
-                "confidence_threshold": threshold, "gestures": GESTURES}
+                "confidence_threshold": threshold, "gestures": GESTURES,
+                "capabilities": {"hand_center": True, "finger_count": True}}
 
     @app.get("/metrics")
     def metrics():
@@ -78,7 +79,7 @@ def create_app(model_path=None, metrics_dir=None, service_loader=GestureService.
             raise HTTPException(404, "No saved metrics for the loaded model")
         return result
 
-    @app.post("/predict", response_model=Prediction)
+    @app.post("/predict", response_model=Prediction, response_model_exclude_unset=True)
     async def predict(request: Request):
         content_type = request.headers.get("content-type", "").partition(";")[0].strip().lower()
         if content_type not in IMAGE_TYPES:

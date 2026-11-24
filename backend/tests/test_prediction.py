@@ -7,8 +7,9 @@ from PIL import Image
 import pytest
 
 from backend.app.main import create_app
+from backend.tests.test_finger_count import hand, image
 from ml.inference.service import GestureService
-from ml.preprocessing.features import GESTURES, normalize_landmarks
+from ml.preprocessing.features import GESTURES, HandObservation, normalize_landmarks
 from ml.preprocessing.prepare import validated_records
 
 
@@ -28,9 +29,9 @@ class Detector:
     def __init__(self, found):
         self.found = found
 
-    def extract(self, image):
+    def observe(self, image):
         assert image.shape == (48, 64, 3)
-        return np.ones(63) if self.found else None
+        return HandObservation(np.ones(63), (0.42, 0.75)) if self.found else None
 
     def close(self):
         pass
@@ -84,10 +85,14 @@ def test_prediction_states(jpeg, found, confidence, label, action):
     with client_for(found, confidence) as client:
         response = client.post("/predict", content=jpeg, headers={"Content-Type": "image/jpeg"})
         assert response.status_code == 200
-        assert response.json() == {
+        expected = {
             "gesture": label, "action": action, "confidence": confidence if found else None,
             "hand_detected": found, "model_name": "random_forest",
+            "finger_count": None, "finger_states": None, "finger_count_quality": "uncertain" if found else None,
         }
+        if found:
+            expected["hand_center"] = {"x": 0.42, "y": 0.75}
+        assert response.json() == expected
 
 
 def test_invalid_images_and_size(jpeg, monkeypatch):
@@ -117,9 +122,46 @@ def test_metrics_match_model(tmp_path):
     report = split / "model_metrics.json"
     with client_for(metrics_dir=tmp_path) as client:
         assert client.get("/health").json()["model_ready"]
-        assert client.get("/models").json()["gestures"] == GESTURES
+        model = client.get("/models").json()
+        assert model["gestures"] == GESTURES
+        assert model["capabilities"] == {"hand_center": True, "finger_count": True}
         assert client.get("/metrics").status_code == 404
         report.write_text(json.dumps({"model_id": "obsolete"}))
         assert client.get("/metrics").status_code == 404
         report.write_text(json.dumps({"model_id": "unit-test", "accuracy": 0.9}))
         assert client.get("/metrics").json()["validation"]["accuracy"] == 0.9
+
+
+@pytest.mark.parametrize("detected_hands", [1, 2])
+def test_finger_count_is_independent_of_random_forest_threshold(jpeg, detected_hands):
+    points = hand(4)
+    detector = Detector(True)
+    detector.observe = lambda _: HandObservation(points.reshape(-1), (.5, .5), image(points), detected_hands)
+    app = create_app(service_loader=lambda _, threshold: GestureService(
+        {"model": FixedClassifier(.4), "model_id": "unit-test"}, detector, threshold,
+    ))
+    with TestClient(app) as client:
+        prediction = client.post("/predict", content=jpeg, headers={"Content-Type": "image/jpeg"}).json()
+    assert prediction["gesture"] == "unknown"
+    assert prediction["finger_count"] == (4 if detected_hands == 1 else None)
+    assert prediction["finger_states"] == (
+        {"thumb": False, "index": True, "middle": True, "ring": True, "pinky": True}
+        if detected_hands == 1 else None
+    )
+    assert prediction["finger_count_quality"] == ("reliable" if detected_hands == 1 else "uncertain")
+
+
+def test_ambiguous_finger_geometry_sets_uncertain_quality_without_a_count(jpeg):
+    points = hand(1)
+    points[8] = points[7] + [.17, .06, 0]
+    detector = Detector(True)
+    detector.observe = lambda _: HandObservation(points.reshape(21 * 3), (.5, .5), image(points))
+    app = create_app(service_loader=lambda _, threshold: GestureService(
+        {"model": FixedClassifier(.91), "model_id": "unit-test"}, detector, threshold,
+    ))
+    with TestClient(app) as client:
+        prediction = client.post("/predict", content=jpeg, headers={"Content-Type": "image/jpeg"}).json()
+    assert prediction["gesture"] == "peace"
+    assert prediction["finger_count"] is None
+    assert prediction["finger_states"] is None
+    assert prediction["finger_count_quality"] == "uncertain"

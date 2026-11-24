@@ -4,25 +4,39 @@ __pycache__/
 .venv/
 .venv-*/
 venv/
+env/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
 
 # Node
 node_modules/
 /frontend/dist/
+/browser-extension/dist/
+/browser-extension/build/
+/browser-extension.zip
+*.crx
 .npm-cache/
 
 # Temporary files and editor metadata
 *.log
 *.tmp
 *.part
+.cache/
 .vscode/
 .idea/
 .vs/
 *.swp
+*.swo
+*~
 .DS_Store
 Thumbs.db
+Desktop.ini
 
 # Local configuration
 .env

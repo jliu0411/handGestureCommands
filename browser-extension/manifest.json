@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Hand Gesture Controls",
+  "description": "Use local hand recognition to scroll and navigate on websites Chrome lets the extension access.",
+  "version": "0.2.3",
+  "minimum_chrome_version": "120",
+  "permissions": ["sidePanel", "scripting"],
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "action": {"default_title": "Open Hand Gesture Controls"},
+  "side_panel": {"default_path": "panel.html"},
+  "background": {"service_worker": "background.js", "type": "module"},
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src http://127.0.0.1:8000 http://127.0.0.1:8765"
+  }
+}

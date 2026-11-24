@@ -36,7 +36,7 @@ The default run found 529 hands in 600 attempts (88.17%). It discarded 71 no-han
 
 ### Optional 500-image export
 
-Select the [500-image ZIP](https://huggingface.co/datasets/GestureDetectionConnoisseurs/hagrid_subsets/blob/main/hagrid-export_500_images.zip) explicitly (2.03 GB). The commands below regenerate the default local prepared dataset, model and reports. Use `--output`, `--data`, `--model` and `--figures` as appropriate to keep a separate run. To test a model at a non-default location, configure its model and metrics paths in the backend's `.env`.
+Select the 500-image export explicitly. The commands below regenerate the default local prepared dataset, model and reports. Use `--output`, `--data`, `--model` and `--figures` as appropriate to keep a separate run. To serve a model at a different location, configure its model and metrics paths in the repository root `.env`. [500-image ZIP (2.03 GB)](https://huggingface.co/datasets/GestureDetectionConnoisseurs/hagrid_subsets/blob/main/hagrid-export_500_images.zip)
 
 ```powershell
 .\.venv\Scripts\python.exe -m ml.preprocessing.prepare --hagrid-subset 500 --per-class 500
@@ -65,4 +65,4 @@ The collection command saves a frame with Space and exits with Q. Repeat for all
 
 Preparation writes `landmarks.csv`, `manifest.csv` and `metadata.json` under `datasets/processed/`. The default cap is 200 usable frames per class per split. Every split needs usable examples from all six classes. The manifest records accepted and rejected rows; the metadata records counts, source, preprocessing settings and split strategy. Keep the raw images, ZIP archives, generated dataset and subject IDs out of Git.
 
-Use `--output <directory>` to run preprocessing checks or experiments alongside the reference dataset. Pass that directory's `landmarks.csv` via `--data` when training or evaluating a model from that run. Evaluation verifies that the landmark file matches the hash saved with the model. See the [root README](../README.md#model-evaluation) for the reference results and report locations.
+Use `--output <directory>` to run preprocessing checks or experiments alongside the reference dataset. Pass that directory's `landmarks.csv` via `--data` when training or evaluating a model from that run. Evaluation verifies that the landmark file matches the hash saved with the model. [Reference results and reproduction commands](../README.md#machine-learning-pipeline)

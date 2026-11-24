@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hand Gesture Controls</title>
+  <link rel="stylesheet" href="panel.css">
+  <script type="module" src="panel.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Hand Gesture Controls</h1>
+    <p id="backend" class="badge" role="status">Checking FastAPI</p>
+  </header>
+  <main>
+    <section aria-label="Camera">
+      <video id="preview" autoplay muted playsinline aria-label="Webcam preview"></video>
+      <div class="buttons">
+        <button id="start" class="primary">Start recognition</button>
+        <button id="stop" disabled>Stop recognition</button>
+        <button id="pause" disabled>Pause commands</button>
+      </div>
+      <p id="camera" role="status">Camera off</p>
+      <button id="camera-access" type="button" hidden>Allow camera in a tab</button>
+    </section>
+    <section aria-label="Recognition status">
+      <dl>
+        <dt>Commands</dt><dd id="state">Stopped</dd>
+        <dt>Raw finger count</dt><dd id="finger-count">—</dd>
+        <dt>Stable finger count</dt><dd id="stable-count">—</dd>
+        <dt>Extended fingers</dt><dd id="fingers">—</dd>
+        <dt>Pose quality</dt><dd id="quality">—</dd>
+        <dt>Random Forest confidence</dt><dd id="classifier-confidence">—</dd>
+        <dt>Browser command</dt><dd id="command">—</dd>
+        <dt>Continuous scrolling</dt><dd id="scrolling">Stopped</dd>
+        <dt>Scroll speed</dt><dd id="speed"></dd>
+        <dt>Scroll direction</dt><dd id="scroll-direction">—</dd>
+        <dt>Animation running</dt><dd id="scroll-running">No</dd>
+        <dt>Last valid pose</dt><dd id="pose-age">—</dd>
+        <dt>Scroll lease</dt><dd id="scroll-lease">Inactive</dd>
+        <dt>Last scroll start / stop</dt><dd id="scroll-reason">Recognition stopped</dd>
+        <dt>Sampling</dt><dd id="sampling">—</dd>
+      </dl>
+      <p id="command-feedback" role="status"></p>
+    </section>
+    <section>
+      <dl>
+        <dt>Active website</dt><dd id="site">—</dd>
+        <dt>Chrome site access</dt><dd id="site-access" role="status">Checking active tab</dd>
+      </dl>
+    </section>
+    <section>
+      <h2>Command history</h2>
+      <p id="empty-history">No commands yet.</p>
+      <ol id="history"></ol>
+    </section>
+    <details>
+      <summary>Browser Command Diagnostics</summary>
+      <div class="buttons">
+        <button type="button" data-test-command="scrollDown">Test Scroll Down</button>
+        <button type="button" data-test-command="scrollUp">Test Scroll Up</button>
+        <button type="button" data-test-command="highlight">Test Highlight Next Link</button>
+        <button type="button" data-test-command="activate">Test Open Selected Link</button>
+        <button type="button" data-test-command="back">Test Go Back</button>
+      </div>
+      <p><label><input type="checkbox" id="bypass-stability"> Diagnostic mode: bypass stability for scrolling and highlighting</label></p>
+      <dl>
+        <dt>Detected count</dt><dd id="debug-count">—</dd>
+        <dt>Mapped command</dt><dd id="debug-mapped">—</dd>
+        <dt>Stability</dt><dd id="debug-stability">—</dd>
+        <dt>Gate result</dt><dd id="debug-gate">—</dd>
+        <dt>Command tested</dt><dd id="debug-command">—</dd>
+        <dt>Dispatched</dt><dd id="debug-dispatched">—</dd>
+        <dt>Worker acknowledged</dt><dd id="debug-worker">—</dd>
+        <dt>Content acknowledged</dt><dd id="debug-content">—</dd>
+        <dt>Executed</dt><dd id="debug-executed">—</dd>
+        <dt>Result</dt><dd id="debug-result">—</dd>
+        <dt>Last scroll renewal</dt><dd id="renewal-result">—</dd>
+      </dl>
+      <p><label><input type="checkbox" id="record-diagnostics"> Record recent recognition and command transitions</label></p>
+      <button type="button" id="copy-diagnostics" disabled>Copy diagnostic report</button>
+      <p id="copy-status" role="status"></p>
+      <textarea id="diagnostic-report" aria-label="Diagnostic report" rows="6" readonly hidden></textarea>
+    </details>
+    <details>
+      <summary>Finger-count guide</summary>
+      <dl id="mappings"></dl>
+    </details>
+  </main>
+</body>
+</html>
