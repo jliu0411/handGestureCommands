@@ -1,0 +1,20 @@
+{
+  "architecture": "mobilenet_v3_small",
+  "selected_epoch": 19,
+  "manifest_sha256": "572924e0d8ef85cb912ad5060d68bb8cd59c56d5aea4166280edb7471575d45c",
+  "platform": "macOS-15.2-arm64-arm-64bit",
+  "python": "3.11.2",
+  "torch_version": "2.9.1",
+  "device": "cpu",
+  "torch_threads": 1,
+  "scope": "Decoded RGB image to gesture and confidence, including input transforms",
+  "confidence_threshold": 0.7,
+  "warmup_predictions": 10,
+  "timed_predictions": 85,
+  "median_ms": 26.126,
+  "p95_ms": 30.076,
+  "outcomes": {
+    "classified": 55,
+    "unknown": 30
+  }
+}
